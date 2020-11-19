@@ -16,10 +16,22 @@ public interface ItemRepo {
     @Select("select count(*) from item")
     Integer findAllCount();
 
-    @Select("select * from item where name like '%' || #{keyword} || '%' limit #{size} offset #{index}")
+    @Select("select * from item where batch like '%' || #{keyword} || '%' " +
+            "or industry like '%' || #{keyword} || '%' " +
+            "or category like '%' || #{keyword} || '%' " +
+            "or health like '%' || #{keyword} || '%' " +
+            "or code like '%' || #{keyword} || '%' " +
+            "or name like '%' || #{keyword} || '%' " +
+            "or scope like '%' || #{keyword} || '%' limit #{size} offset #{index}")
     List<Item> findByKeyword(String keyword, int index, int size);
 
-    @Select("select count(*) from item where name like '%' || #{keyword} || '%'")
+    @Select("select count(*) from item where batch like '%' || #{keyword} || '%' " +
+            "or industry like '%' || #{keyword} || '%' " +
+            "or category like '%' || #{keyword} || '%' " +
+            "or health like '%' || #{keyword} || '%' " +
+            "or code like '%' || #{keyword} || '%' " +
+            "or name like '%' || #{keyword} || '%' " +
+            "or scope like '%' || #{keyword} || '%'")
     Integer findCountByKeyword(String keyword);
 
     Integer insertAll(List<Item> items);
