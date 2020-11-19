@@ -34,3 +34,7 @@ build/
 
 ### database ###
 *.db
+
+### MS Excel ###
+*.xls
+*.xlsx

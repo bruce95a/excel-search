@@ -4,19 +4,16 @@ import com.github.bruce95a.excel.search.entity.Item;
 import com.github.bruce95a.excel.search.entity.PageItems;
 import com.github.bruce95a.excel.search.repository.ItemRepo;
 import com.github.bruce95a.excel.search.service.IItemService;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -32,6 +29,9 @@ public class ItemServiceImpl implements IItemService {
     @Autowired
     private ItemRepo itemRepo;
 
+    @Value("${excel.file.path}")
+    private String filePath;
+
     @Override
     public PageItems find(String keyword, Integer index) {
         PageItems pageItems = new PageItems();
@@ -46,7 +46,7 @@ public class ItemServiceImpl implements IItemService {
     public void reload() {
         try {
             List<Item> infos = new ArrayList<Item>();
-            InputStream is = new FileInputStream("C:\\Users\\Admin\\Desktop\\部分名录编码测试.xlsx");
+            InputStream is = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
             XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
             XSSFRow titleCell = xssfSheet.getRow(0);
@@ -88,12 +88,9 @@ public class ItemServiceImpl implements IItemService {
     //格式方法 获取单元格数据
     private String getValue(XSSFCell xssfRow) {
         if (xssfRow != null) {
-//            if (xssfRow != null) {
-//                xssfRow.setCellType(xssfRow.CELL_TYPE_STRING);
-//            }
-            if (xssfRow.getCellType() == xssfRow.CELL_TYPE_BOOLEAN) {
+            if (xssfRow.getCellType() == CellType.BOOLEAN) {
                 return String.valueOf(xssfRow.getBooleanCellValue());
-            } else if (xssfRow.getCellType() == xssfRow.CELL_TYPE_NUMERIC) {
+            } else if (xssfRow.getCellType() == CellType.NUMERIC) {
                 String result = "";
                 if (xssfRow.getCellStyle().getDataFormat() == 22) {
                     // 处理自定义日期格式：m月d日(通过判断单元格的格式id解决，id的值是58)
