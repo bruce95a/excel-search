@@ -1,6 +1,7 @@
 var app = new Vue({
   el: '#app',
   data: {
+    keyword: '',
     info: {
         items: [{
             batch: '',
@@ -34,7 +35,6 @@ function w3_close() {
 }
 
 function reload() {
- console.log('reload from excel');
  axios.get('reload').then(response => (app.info = response.data));
 }
 
@@ -42,14 +42,21 @@ function find() {
  console.log('search');
  axios.get('items', {
      params: {
-       k: '',
-       i: 1
+       q: app.keyword,
+       p: 1
      }
  })
  .then(response => (app.info = response.data));
 }
 
 function page(arg) {
- console.log('page');
- console.log(arg);
+ var page = app.info.page + arg;
+ page = page > 0 ? page : 1;
+ axios.get('items', {
+      params: {
+        q: app.keyword,
+        p: page
+      }
+  })
+  .then(response => (app.info = response.data));
 }

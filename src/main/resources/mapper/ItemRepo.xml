@@ -6,7 +6,7 @@
 <mapper namespace = "com.github.bruce95a.excel.search.repository.ItemRepo">
     <insert id = "insertAll" parameterType="List" >
         insert into item (batch,industry,category,health,code,name,scope,logout,status)  VALUES
-        <foreach collection="infos" item="item" separator=",">
+        <foreach collection="items" item="item" separator=",">
             (#{item.batch},#{item.industry},#{item.category},#{item.health},#{item.code},#{item.name},#{item.scope},#{item.logout},#{item.status})
         </foreach>
     </insert>

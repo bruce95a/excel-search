@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <script src="js/vue.js"></script>
+    <script src="js/vue.min.js"></script>
     <script src="js/axios.js"></script>
 </head>
 <body class="w3-light-grey w3-content" style="max-width: 1600px;">
@@ -27,7 +27,7 @@
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor: pointer;" title="关闭菜单" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main">
+<div class="w3-main" id="app">
 
     <!-- Header -->
     <header id="portfolio">
@@ -36,7 +36,8 @@
         <div class="w3-container">
             <h1><b>Excel搜索</b></h1>
             <div class="w3-section w3-bottombar w3-padding-16">
-                <span class="w3-margin-right">功能:</span>
+                <span class="w3-margin-right">搜索条件:</span>
+                <input v-model="keyword" placeholder="关键字">
                 <a href="#" onclick="find()" class="w3-button w3-white" title="搜索">
                     <i class="fa fa-search fa-fw w3-margin-right"></i>搜索</a>
                 <a href="#" onclick="reload()" class="w3-button w3-white" title="从Excel重新加载数据">
@@ -44,45 +45,43 @@
             </div>
         </div>
     </header>
-    <div id="app">
-        <table class="w3-table-all">
-            <tr>
-                <th style="width:60px;">批次</th>
-                <th style="width:80px;">国民经济行业代码</th>
-                <th style="width:80px;">健康产业分类</th>
-                <th style="width:80px;">健康产业代码</th>
-                <th>社会信用代码</th>
-                <th style="width:116px;">商事主体名称</th>
-                <th>经营范围</th>
-                <!--<th>注销日期</th>
-                <th>注销标识</th>-->
-            </tr>
-            <tr v-for="item in info.items">
-                <td>{{ item.batch }}</td>
-                <td>{{ item.industry }}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.health }}</td>
-                <td>{{ item.code }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.scope }}</td>
-               <!-- <td>{{ item.logout }}</td>
-                <td>{{ item.status }}</td>-->
-            </tr>
-        </table>
+    <table class="w3-table-all">
+        <tr>
+            <th style="width:60px;">批次</th>
+            <th style="width:80px;">国民经济行业代码</th>
+            <th style="width:80px;">健康产业分类</th>
+            <th style="width:80px;">健康产业代码</th>
+            <th>社会信用代码</th>
+            <th style="width:116px;">商事主体名称</th>
+            <th>经营范围</th>
+            <!--<th>注销日期</th>
+            <th>注销标识</th>-->
+        </tr>
+        <tr v-for="item in info.items">
+            <td>{{ item.batch }}</td>
+            <td>{{ item.industry }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.health }}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.scope }}</td>
+            <!-- <td>{{ item.logout }}</td>
+             <td>{{ item.status }}</td>-->
+        </tr>
+    </table>
 
-        <!-- Pagination -->
-        <div class="w3-center w3-padding-32">
-            <div class="w3-bar">
-                <span v-if="info.index > 1">
+    <!-- Pagination -->
+    <div class="w3-center w3-padding-32">
+        <div class="w3-bar">
+                <span v-if="info.page > 1">
                     <a class="w3-bar-item w3-button" href="#" onclick="page(-1)">上一页</a>
                 </span>
-                <span>
+            <span>
                     <i class="w3-bar-item">{{ info.page }} / {{ info.total }}</i>
                 </span>
-                <span v-if="info.count > info.index">
+            <span v-if="info.total > info.page">
                     <a class="w3-bar-item w3-button" href="#" onclick="page(1)">下一页</a>
                 </span>
-            </div>
         </div>
     </div>
 

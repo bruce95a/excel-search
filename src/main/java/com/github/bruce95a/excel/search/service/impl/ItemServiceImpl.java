@@ -10,6 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ import java.util.List;
 @Service
 public class ItemServiceImpl implements IItemService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
+
     @Autowired
     private ItemRepo itemRepo;
 
@@ -33,19 +37,28 @@ public class ItemServiceImpl implements IItemService {
     private String filePath;
 
     @Override
-    public PageItems find(String keyword, Integer index) {
+    public PageItems find(String keyword, int page, int size) {
+        int index = (page - 1) * size;
+        int count = 0;
         PageItems pageItems = new PageItems();
-        pageItems.setItems(itemRepo.findAll());
-        pageItems.setTotal(5);
-        pageItems.setSize(1);
-        pageItems.setPage(3);
+        if ("".equals(keyword)) {
+            pageItems.setItems(itemRepo.findAll(index, size));
+            count = itemRepo.findAllCount();
+        } else {
+            pageItems.setItems(itemRepo.findByKeyword(keyword, index, size));
+            count = itemRepo.findCountByKeyword(keyword);
+        }
+        int totalPage = count % size == 0 ? count / size : (count / size + 1);
+        pageItems.setTotal(totalPage);
+        pageItems.setPage(page);
+        pageItems.setSize(size);
         return pageItems;
     }
 
     @Override
     public void reload() {
         try {
-            List<Item> infos = new ArrayList<Item>();
+            List<Item> items = new ArrayList<Item>();
             InputStream is = new FileInputStream(filePath);
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
             XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
@@ -73,15 +86,14 @@ public class ItemServiceImpl implements IItemService {
                 item.setScope(getValue(scope));
                // item.setLogout(getValue(logout));
                 //item.setStatus(getValue(status));
-                infos.add(item);
+                items.add(item);
             }
             //全部删除
             itemRepo.deleteAll();
             //批量导入
-            itemRepo.insertAll(infos);
+            itemRepo.insertAll(items);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEL数据导入错误" + e.getMessage());
+            logger.error("EXCEL数据导入错误", e);
         }
     }
 

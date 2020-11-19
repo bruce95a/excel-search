@@ -16,17 +16,19 @@ public class DataController {
     @Autowired
     private IItemService itemService;
 
+    private final int size = 10;
+
     @GetMapping("/items")
-    public PageItems getItems(@RequestParam(value = "k", defaultValue = "") String keyword,
-                              @RequestParam(value = "i", defaultValue = "1") Integer index) {
+    public PageItems getItems(@RequestParam(value = "q", defaultValue = "") String keyword,
+                              @RequestParam(value = "p", defaultValue = "1") Integer page) {
         logger.debug("keyword", keyword);
-        logger.debug("pageIndex", index);
-        return itemService.find(keyword, index);
+        logger.debug("pageIndex", page);
+        return itemService.find(keyword, page, size);
     }
 
     @GetMapping("/reload")
     public PageItems reload() {
         itemService.reload();
-        return itemService.find("", 1);
+        return itemService.find("", 1, size);
     }
 }
