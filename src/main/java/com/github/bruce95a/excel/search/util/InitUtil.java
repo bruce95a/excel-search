@@ -25,7 +25,7 @@ public class InitUtil {
                 "health varchar(255)," +
                 "code varchar(255)," +
                 "name varchar(255)," +
-                "scope varchar(255)," +
+                "scope varchar(3000)," +
                 "logout varchar(255)," +
                 "status varchar(255) );");
     }

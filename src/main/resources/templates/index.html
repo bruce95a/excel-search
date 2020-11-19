@@ -12,25 +12,22 @@
 <body class="w3-light-grey w3-content" style="max-width: 1600px;">
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3; width:300px;" id="mySidebar"><br>
+<!--<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3; width:100px;" id="mySidebar"><br>
     <div class="w3-container">
-        <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="关闭菜单">
-            <i class="fa fa-remove"></i>
-        </a>
         <img src="img/avatar_g2.jpg" style="width: 45%;" class="w3-round"><br><br>
         <h4><b>操作</b></h4>
     </div>
     <div class="w3-bar-block">
         <a href="#" onclick="reload()" class="w3-bar-item w3-button w3-padding" title="从Excel重新加载数据">
-            <i class="fa fa-refresh fa-fw w3-margin-right"></i>重新加载</a>
+            <i class="fa fa-refresh fa-fw w3-margin-right"></i>重新导入EXCLE数据</a>
     </div>
-</nav>
+</nav>-->
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor: pointer;" title="关闭菜单" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px">
+<div class="w3-main">
 
     <!-- Header -->
     <header id="portfolio">
@@ -39,24 +36,26 @@
         <div class="w3-container">
             <h1><b>Excel搜索</b></h1>
             <div class="w3-section w3-bottombar w3-padding-16">
-                <span class="w3-margin-right">搜索:</span>
+                <span class="w3-margin-right">功能:</span>
                 <a href="#" onclick="find()" class="w3-button w3-white" title="搜索">
                     <i class="fa fa-search fa-fw w3-margin-right"></i>搜索</a>
+                <a href="#" onclick="reload()" class="w3-button w3-white" title="从Excel重新加载数据">
+                    <i class="fa fa-refresh fa-fw w3-margin-right"></i>导入数据</a>
             </div>
         </div>
     </header>
     <div id="app">
         <table class="w3-table-all">
             <tr>
-                <th>批次</th>
-                <th>国民经济行业代码</th>
-                <th>健康产业分类</th>
-                <th>健康产业代码</th>
+                <th style="width:60px;">批次</th>
+                <th style="width:80px;">国民经济行业代码</th>
+                <th style="width:80px;">健康产业分类</th>
+                <th style="width:80px;">健康产业代码</th>
                 <th>社会信用代码</th>
-                <th>商事主体名称</th>
+                <th style="width:116px;">商事主体名称</th>
                 <th>经营范围</th>
-                <th>注销日期</th>
-                <th>注销标识</th>
+                <!--<th>注销日期</th>
+                <th>注销标识</th>-->
             </tr>
             <tr v-for="item in info.items">
                 <td>{{ item.batch }}</td>
@@ -66,8 +65,8 @@
                 <td>{{ item.code }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.scope }}</td>
-                <td>{{ item.logout }}</td>
-                <td>{{ item.status }}</td>
+               <!-- <td>{{ item.logout }}</td>
+                <td>{{ item.status }}</td>-->
             </tr>
         </table>
 
@@ -87,9 +86,9 @@
         </div>
     </div>
 
-    <div class="w3-green w3-center w3-padding-24">Powered by
+    <!--<div class="w3-green w3-center w3-padding-24">Powered by
         <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a>
-    </div>
+    </div>-->
     <!-- End page content -->
 </div>
 <script src="js/index.js"></script>
