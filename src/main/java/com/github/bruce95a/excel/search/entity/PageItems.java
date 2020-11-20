@@ -7,6 +7,7 @@ public class PageItems implements Serializable {
     private Integer page; // current page index
     private Integer size; // page size
     private Integer total; // total page
+    private Integer totalNm; // total num
     private List<Item> items;
 
     public Integer getPage() {
@@ -39,5 +40,13 @@ public class PageItems implements Serializable {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public Integer getTotalNm() {
+        return totalNm;
+    }
+
+    public void setTotalNm(Integer totalNm) {
+        this.totalNm = totalNm;
     }
 }

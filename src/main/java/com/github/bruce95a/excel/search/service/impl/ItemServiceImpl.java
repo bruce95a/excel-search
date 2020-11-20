@@ -52,6 +52,7 @@ public class ItemServiceImpl implements IItemService {
         pageItems.setTotal(totalPage);
         pageItems.setPage(page);
         pageItems.setSize(size);
+        pageItems.setTotalNm(count);
         return pageItems;
     }
 

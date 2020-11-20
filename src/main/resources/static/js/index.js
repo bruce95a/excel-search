@@ -21,7 +21,20 @@ var app = new Vue({
   },
   mounted() {
     axios.get('items').then(response => (this.info = response.data));
-  }
+  },
+    methods:{
+        cancelFun: function(){
+            document.getElementById("frameId").style.display = "none";
+        },
+        sureFun: function(index){
+            axios.get('reload').then(response => (app.info = response.data));
+            document.getElementById("frameId").style.display = "none";
+
+        },
+        reLoadFun: function(index){
+            document.getElementById("frameId").style.display = "block";
+        }
+    }
 });
 
 function w3_open() {
@@ -32,10 +45,6 @@ function w3_open() {
 function w3_close() {
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("myOverlay").style.display = "none";
-}
-
-function reload() {
- axios.get('reload').then(response => (app.info = response.data));
 }
 
 function find() {

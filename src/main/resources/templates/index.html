@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <script src="js/vue.min.js"></script>
     <script src="js/axios.js"></script>
+    <style>
+        .w3-table td, .w3-table th, .w3-table-all td, .w3-table-all th{
+            width:10%;
+        }
+        .w3-table td:nth-child(1), .w3-table th:nth-child(1), .w3-table-all td:nth-child(1), .w3-table-all th:nth-child(1){
+            width:5%;
+        }
+        .w3-table td:nth-child(4), .w3-table th:nth-child(4), .w3-table-all td:nth-child(4), .w3-table-all th:nth-child(4){
+            width:5%;
+        }
+        .w3-table td:nth-last-child(1), .w3-table th:nth-last-child(1), .w3-table-all td:nth-last-child(1), .w3-table-all th:nth-last-child(1){
+            width:40%;
+        }
+    </style>
 </head>
 <body class="w3-light-grey w3-content" style="max-width: 1600px;">
 
@@ -40,19 +54,19 @@
                 <input v-model="keyword" placeholder="关键字">
                 <a href="#" onclick="find()" class="w3-button w3-white" title="搜索">
                     <i class="fa fa-search fa-fw w3-margin-right"></i>搜索</a>
-                <a href="#" onclick="reload()" class="w3-button w3-white" title="从Excel重新加载数据">
+                <a href="#" @click="reLoadFun" class="w3-button w3-white" title="从Excel重新加载数据">
                     <i class="fa fa-refresh fa-fw w3-margin-right"></i>导入数据</a>
             </div>
         </div>
     </header>
     <table class="w3-table-all">
         <tr>
-            <th style="width:60px;">批次</th>
-            <th style="width:80px;">国民经济行业代码</th>
-            <th style="width:80px;">健康产业分类</th>
-            <th style="width:80px;">健康产业代码</th>
+            <th >批次</th>
+            <th >国民经济行业代码</th>
+            <th >健康产业分类</th>
+            <th >健康产业代码</th>
             <th>社会信用代码</th>
-            <th style="width:116px;">商事主体名称</th>
+            <th >商事主体名称</th>
             <th>经营范围</th>
             <!--<th>注销日期</th>
             <th>注销标识</th>-->
@@ -73,6 +87,9 @@
     <!-- Pagination -->
     <div class="w3-center w3-padding-32">
         <div class="w3-bar">
+             <span>
+                    <i class="w3-bar-item">共{{ info.totalNm }}条</i>
+                </span>
                 <span v-if="info.page > 1">
                     <a class="w3-bar-item w3-button" href="#" onclick="page(-1)">上一页</a>
                 </span>
@@ -82,9 +99,19 @@
             <span v-if="info.total > info.page">
                     <a class="w3-bar-item w3-button" href="#" onclick="page(1)">下一页</a>
                 </span>
+
         </div>
     </div>
-
+    <div  id="frameId" class="frame_layer">
+        <div class="wrap_layer">
+            <h2>提示</h2>
+            <p>确定重新打导入数据吗?</p>
+            <div class="foot_layer">
+                <span class="cancel" @click="cancelFun">取消</span>
+                <span class="sure" @click="sureFun">确定</span>
+            </div>
+        </div>
+    </div>
     <!--<div class="w3-green w3-center w3-padding-24">Powered by
         <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a>
     </div>-->
@@ -93,3 +120,63 @@
 <script src="js/index.js"></script>
 </body>
 </html>
+<style>
+    .frame_layer{
+        display: none;
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 10000;
+        width:100%;
+        height: 100%;
+        background: rgba(0,0,0,0.25);
+    }
+    .frame_layer .wrap_layer{
+        width: 350px;
+        height: 200px;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        z-index: 100000000001;
+        background: #fff;
+        border-radius: 10px;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .frame_layer .wrap_layer  h2{
+        height: 30px;
+        line-height: 30px;
+        font-size: 24px;
+        color: #000;
+    }
+    .frame_layer .wrap_layer  p{
+        height: 30px;
+        line-height: 30px;
+        font-size: 16px;
+        color: #666;
+    }
+    .frame_layer .wrap_layer  .foot_layer{
+        height: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+    .frame_layer .wrap_layer  .foot_layer span{
+        width: 60px;
+        height: 24px;
+        font-size: 14px;
+        border-radius: 12px;
+        border:1px solid #333;
+        display: block;
+    }
+    .frame_layer .wrap_layer  .foot_layer span.cancel{
+        background: #ccc;
+    }
+    .frame_layer .wrap_layer  .foot_layer span.sure{
+       background: #00bcd4;
+        color: #fff;
+    }
+</style>
