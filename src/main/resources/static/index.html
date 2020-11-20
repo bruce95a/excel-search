@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Excel Search</title>
@@ -9,78 +10,81 @@
     <script src="js/vue.min.js"></script>
     <script src="js/axios.js"></script>
 </head>
+
 <body class="w3-light-grey w3-content" style="max-width: 1600px;">
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" id="app">
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" id="app">
 
-    <!-- Header -->
-    <header id="portfolio">
-        <a href="#"><img src="img/avatar_g2.jpg" style="width: 65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
-        <div class="w3-container">
-            <h1><b>Excel搜索</b></h1>
-            <div class="w3-section w3-bottombar w3-padding-16">
-                <span class="w3-margin-right">搜索条件:</span>
-                <input v-model="keyword" placeholder="关键字">
-                <a href="#" @click="find" class="w3-button w3-white" title="搜索">搜索</a>
-                <a href="#" @click="reLoadFun" class="w3-button w3-white" title="从Excel重新加载数据">导入数据</a>
+        <!-- Header -->
+        <header id="portfolio">
+            <a href="#"><img src="img/avatar_g2.jpg" style="width: 65px;"
+                    class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
+            <div class="w3-container">
+                <h1><b>Excel搜索</b></h1>
+                <div class="w3-section w3-bottombar w3-padding-16">
+                    <span class="w3-margin-right">搜索条件:</span>
+                    <input v-model="keyword" placeholder="关键字">
+                    <a href="#" @click="find" class="w3-button w3-white" title="搜索">搜索</a>
+                    <a href="#" @click="reLoadFun" class="w3-button w3-white" title="从Excel重新加载数据">导入数据</a>
+                </div>
             </div>
-        </div>
-    </header>
-    <table class="w3-table-all">
-        <tr>
-            <th>批次</th>
-            <th>国民经济行业代码</th>
-            <th>健康产业分类</th>
-            <th>健康产业代码</th>
-            <th>社会信用代码</th>
-            <th>商事主体名称</th>
-            <th>经营范围</th>
-            <!--<th>注销日期</th>
+        </header>
+        <table class="w3-table-all">
+            <tr>
+                <th>批次</th>
+                <th>国民经济行业代码</th>
+                <th>健康产业分类</th>
+                <th>健康产业代码</th>
+                <th>社会信用代码</th>
+                <th>商事主体名称</th>
+                <th>经营范围</th>
+                <!--<th>注销日期</th>
             <th>注销标识</th>-->
-        </tr>
-        <tr v-for="item in info.items">
-            <td>{{ item.batch }}</td>
-            <td>{{ item.industry }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.health }}</td>
-            <td>{{ item.code }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.scope }}</td>
-            <!-- <td>{{ item.logout }}</td>
+            </tr>
+            <tr v-for="item in info.items">
+                <td>{{ item.batch }}</td>
+                <td>{{ item.industry }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.health }}</td>
+                <td>{{ item.code }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.scope }}</td>
+                <!-- <td>{{ item.logout }}</td>
              <td>{{ item.status }}</td>-->
-        </tr>
-    </table>
+            </tr>
+        </table>
 
-    <!-- Pagination -->
-    <div class="w3-center w3-padding-32">
-        <div class="w3-bar">
-             <span>
-                <i class="w3-bar-item">共{{ info.totalNm }}条</i>
-            </span>
-            <span v-if="info.page > 1">
-                <a class="w3-bar-item w3-button" href="#" @click="page(-1)">上一页</a>
-            </span>
-            <span>
-                <i class="w3-bar-item">{{ info.page }} / {{ info.total }}</i>
-            </span>
-            <span v-if="info.total > info.page">
-                <a class="w3-bar-item w3-button" href="#" @click="page(1)">下一页</a>
-            </span>
-        </div>
-    </div>
-    <div id="frameId" class="frame_layer">
-        <div class="wrap_layer">
-            <h2>提示</h2>
-            <p>确定重新打导入数据吗?</p>
-            <div class="foot_layer">
-                <button class="cancel w3-button" @click="cancelFun">取消</button>
-                <button class="sure w3-button" @click="sureFun">确定</button>
+        <!-- Pagination -->
+        <div class="w3-center w3-padding-32">
+            <div class="w3-bar">
+                <span>
+                    <i class="w3-bar-item">共{{ info.totalNm }}条</i>
+                </span>
+                <span v-if="info.page > 1">
+                    <a class="w3-bar-item w3-button" href="#" @click="page(-1)">上一页</a>
+                </span>
+                <span>
+                    <i class="w3-bar-item">{{ info.page }} / {{ info.total }}</i>
+                </span>
+                <span v-if="info.total > info.page">
+                    <a class="w3-bar-item w3-button" href="#" @click="page(1)">下一页</a>
+                </span>
             </div>
         </div>
+        <div id="frameId" class="frame_layer">
+            <div class="wrap_layer">
+                <h2>提示</h2>
+                <p>确定重新打导入数据吗?</p>
+                <div class="foot_layer">
+                    <button class="cancel w3-button" @click="cancelFun">取消</button>
+                    <button class="sure w3-button" @click="sureFun">确定</button>
+                </div>
+            </div>
+        </div>
+        <!-- End page content -->
     </div>
-    <!-- End page content -->
-</div>
-<script src="js/index.js"></script>
+    <script src="js/index.js"></script>
 </body>
+
 </html>
