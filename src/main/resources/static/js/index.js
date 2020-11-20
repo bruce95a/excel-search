@@ -27,12 +27,32 @@ var app = new Vue({
             document.getElementById("frameId").style.display = "none";
         },
         sureFun: function(index){
-            axios.get('reload').then(response => (app.info = response.data));
+            axios.get('reload').then(response => (this.info = response.data));
             document.getElementById("frameId").style.display = "none";
 
         },
         reLoadFun: function(index){
             document.getElementById("frameId").style.display = "block";
+        },
+        find: function() {
+            axios.get('items', {
+                 params: {
+                   q: this.keyword,
+                   p: 1
+                 }
+             })
+             .then(response => (this.info = response.data));
+        },
+        page: function(arg) {
+             var page = app.info.page + arg;
+             page = page > 0 ? page : 1;
+             axios.get('items', {
+                  params: {
+                    q: this.keyword,
+                    p: page
+                  }
+              })
+              .then(response => (this.info = response.data));
         }
     }
 });
@@ -45,27 +65,4 @@ function w3_open() {
 function w3_close() {
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("myOverlay").style.display = "none";
-}
-
-function find() {
- console.log('search');
- axios.get('items', {
-     params: {
-       q: app.keyword,
-       p: 1
-     }
- })
- .then(response => (app.info = response.data));
-}
-
-function page(arg) {
- var page = app.info.page + arg;
- page = page > 0 ? page : 1;
- axios.get('items', {
-      params: {
-        q: app.keyword,
-        p: page
-      }
-  })
-  .then(response => (app.info = response.data));
 }
