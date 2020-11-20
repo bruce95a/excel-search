@@ -5,15 +5,11 @@
     <title>Excel Search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/w3.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/index.css">
     <script src="js/vue.min.js"></script>
     <script src="js/axios.js"></script>
 </head>
 <body class="w3-light-grey w3-content" style="max-width: 1600px;">
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor: pointer;" title="关闭菜单" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" id="app">
@@ -21,16 +17,13 @@
     <!-- Header -->
     <header id="portfolio">
         <a href="#"><img src="img/avatar_g2.jpg" style="width: 65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
-        <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
         <div class="w3-container">
             <h1><b>Excel搜索</b></h1>
             <div class="w3-section w3-bottombar w3-padding-16">
                 <span class="w3-margin-right">搜索条件:</span>
                 <input v-model="keyword" placeholder="关键字">
-                <a href="#" @click="find" class="w3-button w3-white" title="搜索">
-                    <i class="fa fa-search fa-fw w3-margin-right"></i>搜索</a>
-                <a href="#" @click="reLoadFun" class="w3-button w3-white" title="从Excel重新加载数据">
-                    <i class="fa fa-refresh fa-fw w3-margin-right"></i>导入数据</a>
+                <a href="#" @click="find" class="w3-button w3-white" title="搜索">搜索</a>
+                <a href="#" @click="reLoadFun" class="w3-button w3-white" title="从Excel重新加载数据">导入数据</a>
             </div>
         </div>
     </header>
