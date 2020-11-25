@@ -9,6 +9,7 @@ public class PageItems implements Serializable {
     private Integer total; // total page
     private Integer totalNm; // total num
     private List<Item> items;
+    private List<HealInd> healInds;
 
     public Integer getPage() {
         return page;
@@ -34,6 +35,14 @@ public class PageItems implements Serializable {
         this.total = total;
     }
 
+    public Integer getTotalNm() {
+        return totalNm;
+    }
+
+    public void setTotalNm(Integer totalNm) {
+        this.totalNm = totalNm;
+    }
+
     public List<Item> getItems() {
         return items;
     }
@@ -42,11 +51,11 @@ public class PageItems implements Serializable {
         this.items = items;
     }
 
-    public Integer getTotalNm() {
-        return totalNm;
+    public List<HealInd> getHealInds() {
+        return healInds;
     }
 
-    public void setTotalNm(Integer totalNm) {
-        this.totalNm = totalNm;
+    public void setHealInds(List<HealInd> healInds) {
+        this.healInds = healInds;
     }
 }

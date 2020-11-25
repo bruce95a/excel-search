@@ -27,6 +27,12 @@ public class InitUtil {
                 "name varchar(255)," +
                 "scope varchar(3000)," +
                 "logout varchar(255)," +
-                "status varchar(255) );");
+                "status varchar(255) )");
+
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS health_Ind (" +
+                "heal_Cd varchar(255)," +
+                "heal_Nm varchar(255)," +
+                "Heal_Desc varchar(255)," +
+                "industry_Cd varchar(255) )");
     }
 }

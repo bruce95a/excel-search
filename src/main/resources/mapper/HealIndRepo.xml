@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.github.bruce95a.excel.search.repository.HealIndRepo">
+    <select id="findAll" resultType="com.github.bruce95a.excel.search.entity.HealInd" parameterType="com.github.bruce95a.excel.search.entity.Param">
+        select heal_Cd as healCd,
+        heal_Nm as healNm,
+        Heal_Desc as HealDesc,
+        industry_Cd as industryCd from health_Ind
+        <if test="keyword!=null &amp;&amp; keyword!=&quot;&quot; ">
+            where heal_Cd like '%' || #{keyword} || '%'
+            or heal_Nm like '%' || #{keyword} || '%'
+            or Heal_Desc like '%' || #{keyword} || '%'
+            or industry_Cd like '%' || #{keyword} || '%'
+        </if>
+        limit #{size} offset #{index}
+    </select>
+
+    <select id="findAllCount" resultType="integer">
+        select count(*) from health_Ind
+        <if test="keyword!=null &amp;&amp; keyword!=&quot;&quot; ">
+            where heal_Cd like '%' || #{keyword} || '%'
+            or heal_Nm like '%' || #{keyword} || '%'
+            or Heal_Desc like '%' || #{keyword} || '%'
+            or industry_Cd like '%' || #{keyword} || '%'
+        </if>
+    </select>
+</mapper>

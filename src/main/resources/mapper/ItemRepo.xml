@@ -10,4 +10,44 @@
             (#{item.batch},#{item.industry},#{item.category},#{item.health},#{item.code},#{item.name},#{item.scope},#{item.logout},#{item.status})
         </foreach>
     </insert>
+
+    <select id="findAll" resultType="com.github.bruce95a.excel.search.entity.Item" parameterType="com.github.bruce95a.excel.search.entity.Param">
+
+        <!--if
+            test:就是判断表达式(OGNL)
+            是从参数里面取值进行判断的
+            如果遇到特殊符号应该去写转义字符
+            比如下面的ename的判断
+                单引号可以写成:&quot;
+                and本来可以写成&&,但是$是特殊符号,可以写成&amp;
+                结果就是:<if test="ename!=null &amp;&amp; ename!=&quot;&quot; "></if>
+
+                下面的gender==&quot;男&quot;不能写成gender=='男'
+                这样不能通过,'男'会将男当成数字进行转换,但是''可以代表空串
+         -->
+        select * from item
+        <if test="keyword!=null &amp;&amp; keyword!=&quot;&quot; ">
+            where batch like '%' || #{keyword} || '%'
+            or industry like '%' || #{keyword} || '%'
+            or category like '%' || #{keyword} || '%'
+            or health like '%' || #{keyword} || '%'
+            or code like '%' || #{keyword} || '%'
+            or name like '%' || #{keyword} || '%'
+            or scope like '%' || #{keyword} || '%'
+        </if>
+        limit #{size} offset #{index}
+    </select>
+
+    <select id="findAllCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) from item
+        <if test="keyword!=null &amp;&amp; keyword!=&quot;&quot; ">
+            where batch like '%' || #{keyword} || '%'
+            or industry like '%' || #{keyword} || '%'
+            or category like '%' || #{keyword} || '%'
+            or health like '%' || #{keyword} || '%'
+            or code like '%' || #{keyword} || '%'
+            or name like '%' || #{keyword} || '%'
+            or scope like '%' || #{keyword} || '%'
+        </if>
+    </select>
 </mapper>

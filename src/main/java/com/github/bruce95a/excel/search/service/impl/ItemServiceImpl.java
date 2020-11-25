@@ -2,14 +2,11 @@ package com.github.bruce95a.excel.search.service.impl;
 
 import com.github.bruce95a.excel.search.entity.Item;
 import com.github.bruce95a.excel.search.entity.PageItems;
+import com.github.bruce95a.excel.search.entity.Param;
+import com.github.bruce95a.excel.search.repository.HealIndRepo;
 import com.github.bruce95a.excel.search.repository.ItemRepo;
 import com.github.bruce95a.excel.search.service.IItemService;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -33,22 +31,31 @@ public class ItemServiceImpl implements IItemService {
     @Autowired
     private ItemRepo itemRepo;
 
+    @Autowired
+    private HealIndRepo healIndRepo;
+
     @Value("${excel.file.path}")
     private String filePath;
 
     @Override
-    public PageItems find(String keyword, int page, int size) {
+    public PageItems find(String keyword, int page, int size, String tpCd) {
+        //tpCd 操作类型 1-查询名录 2-查询健康产业代码
         int index = (page - 1) * size;
         int count = 0;
         PageItems pageItems = new PageItems();
-        if ("".equals(keyword)) {
-            pageItems.setItems(itemRepo.findAll(index, size));
-            count = itemRepo.findAllCount();
-        } else {
-            pageItems.setItems(itemRepo.findByKeyword(keyword, index, size));
-            count = itemRepo.findCountByKeyword(keyword);
+        Param param = new Param();
+        param.setIndex(index);
+        param.setKeyword(keyword);
+        param.setSize(size);
+        if("1".equals(tpCd)){
+            pageItems.setItems(itemRepo.findAll(param));
+            count = itemRepo.findAllCount(keyword);
+        }else if("2".equals(tpCd)){
+            pageItems.setHealInds(healIndRepo.findAll(param));
+            count = healIndRepo.findAllCount(keyword);
         }
         int totalPage = count % size == 0 ? count / size : (count / size + 1);
+        totalPage = totalPage == 0 ? 1 : totalPage;
         pageItems.setTotal(totalPage);
         pageItems.setPage(page);
         pageItems.setSize(size);
@@ -58,35 +65,22 @@ public class ItemServiceImpl implements IItemService {
 
     @Override
     public void reload() {
+        InputStream is = null;
         try {
-            List<Item> items = new ArrayList<Item>();
-            InputStream is = new FileInputStream(filePath);
-            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
-            XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
-            XSSFRow titleCell = xssfSheet.getRow(0);
-            for (int i = 2; i <= xssfSheet.getLastRowNum(); i++) {
-                XSSFRow xssfRow = xssfSheet.getRow(i);
-                int minCell = xssfRow.getFirstCellNum();
-                int maxCell = xssfRow.getLastCellNum();
-                XSSFCell batch = xssfRow.getCell(0);
-                XSSFCell industry = xssfRow.getCell(1);
-                XSSFCell category = xssfRow.getCell(2);
-                XSSFCell health = xssfRow.getCell(3);
-                XSSFCell code = xssfRow.getCell(4);
-                XSSFCell name = xssfRow.getCell(5);
-                XSSFCell scope = xssfRow.getCell(6);
-               // XSSFCell logout = xssfRow.getCell(7);
-                //XSSFCell status = xssfRow.getCell(8);
+            List<Item> items = new ArrayList<>();
+            is = new FileInputStream(filePath);
+            Workbook workbook = WorkbookFactory.create(is);
+            Sheet sheet = workbook.getSheetAt(0);
+            for (int i = 2; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
                 Item item = new Item();
-                item.setBatch(getValue(batch));
-                item.setIndustry(getValue(industry));
-                item.setCategory(getValue(category));
-                item.setHealth(getValue(health));
-                item.setCode(getValue(code));
-                item.setName(getValue(name));
-                item.setScope(getValue(scope));
-               // item.setLogout(getValue(logout));
-                //item.setStatus(getValue(status));
+                item.setBatch(getValue(row.getCell(0)));
+                item.setIndustry(getValue(row.getCell(1)));
+                item.setCategory(getValue(row.getCell(2)));
+                item.setHealth(getValue(row.getCell(3)));
+                item.setCode(getValue(row.getCell(4)));
+                item.setName(getValue(row.getCell(5)));
+                item.setScope(getValue(row.getCell(6)));
                 items.add(item);
             }
             //全部删除
@@ -95,25 +89,33 @@ public class ItemServiceImpl implements IItemService {
             itemRepo.insertAll(items);
         } catch (Exception e) {
             logger.error("EXCEL数据导入错误", e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    logger.error("EXCEL数据导入错误", e);
+                }
+            }
         }
     }
 
     //格式方法 获取单元格数据
-    private String getValue(XSSFCell xssfRow) {
-        if (xssfRow != null) {
-            if (xssfRow.getCellType() == CellType.BOOLEAN) {
-                return String.valueOf(xssfRow.getBooleanCellValue());
-            } else if (xssfRow.getCellType() == CellType.NUMERIC) {
+    private String getValue(Cell cell) {
+        if (cell != null) {
+            if (cell.getCellType() == CellType.BOOLEAN) {
+                return String.valueOf(cell.getBooleanCellValue());
+            } else if (cell.getCellType() == CellType.NUMERIC) {
                 String result = "";
-                if (xssfRow.getCellStyle().getDataFormat() == 22) {
+                if (cell.getCellStyle().getDataFormat() == 22) {
                     // 处理自定义日期格式：m月d日(通过判断单元格的格式id解决，id的值是58)
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    double value = xssfRow.getNumericCellValue();
+                    final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    double value = cell.getNumericCellValue();
                     Date date = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(value);
                     result = sdf.format(date);
                 } else {
-                    double value = xssfRow.getNumericCellValue();
-                    CellStyle style = xssfRow.getCellStyle();
+                    double value = cell.getNumericCellValue();
+                    CellStyle style = cell.getCellStyle();
                     DecimalFormat format = new DecimalFormat();
                     String temp = style.getDataFormatString();
                     // 单元格设置成常规
@@ -124,7 +126,7 @@ public class ItemServiceImpl implements IItemService {
                 }
                 return result;
             } else {
-                return String.valueOf(xssfRow.getStringCellValue());
+                return String.valueOf(cell.getStringCellValue());
             }
         } else
             return "0";

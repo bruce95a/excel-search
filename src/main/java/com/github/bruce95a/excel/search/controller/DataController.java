@@ -19,16 +19,19 @@ public class DataController {
     private final int size = 10;
 
     @GetMapping("/items")
-    public PageItems getItems(@RequestParam(value = "q", defaultValue = "") String keyword,
-                              @RequestParam(value = "p", defaultValue = "1") Integer page) {
+    public PageItems getItems(@RequestParam(value = "keyword", defaultValue = "") String keyword,
+                              @RequestParam(value = "page", defaultValue = "1") Integer page,
+                              @RequestParam(value = "tpCd", defaultValue = "1") String tpCd) {
+        //tpCd 操作类型 1-查询名录 2-查询健康产业代码
         logger.debug("keyword", keyword);
         logger.debug("pageIndex", page);
-        return itemService.find(keyword, page, size);
+        logger.debug("tpCd", tpCd);
+        return itemService.find(keyword, page, size, tpCd);
     }
 
     @GetMapping("/reload")
     public PageItems reload() {
         itemService.reload();
-        return itemService.find("", 1, size);
+        return itemService.find("", 1, size,"1");
     }
 }
